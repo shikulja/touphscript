@@ -1,0 +1,104 @@
+name: C++ CI Build
+
+on: [push, pull_request]
+
+env:
+  BUILD_NAME: touphScript
+  BUILD_VERSION: 1.5.0
+  BUILD_NUMBER: ${{ github.run_number }}
+  FILES_TO_ARCHIVE: |
+    touphScript.exe
+    Chars.txt
+    readme.txt
+    touphScript.ini
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          base-devel
+
+    - name: Compile Resources
+      run: |
+        windres touphScript.exe.rc -O coff -o touphScript.res
+
+    - name: Compile and Build
+      run: |
+        $files = Get-ChildItem -Path . -Include *.cpp -Recurse
+        foreach ($file in $files) {
+            g++ -c $file.FullName -o $file.FullName.replace('.cpp', '.o') -Wall -Wextra -Wpedantic -Werror -std=c++23
+        }
+        $objFiles = Get-ChildItem -Path . -Include *.o -Recurse
+        $objFilesList = $objFiles | ForEach-Object { $_.FullName }
+        g++ -o touphScript.exe $objFilesList touphScript.res -static -lz -lshlwapi -lShell32 -mconsole
+        strip touphScript.exe
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.BUILD_NAME }}-${{ env.BUILD_VERSION }}.${{ env.BUILD_NUMBER }}
+        path: ${{ env.FILES_TO_ARCHIVE }}
+
+    - name: Archive Files
+      run: |
+        $filesToArchive = $env:FILES_TO_ARCHIVE -split '\r?\n' | Where-Object { $_ -ne '' }
+        $archiveName = "${{ env.BUILD_NAME }}-${{ env.BUILD_VERSION }}.${{ env.BUILD_NUMBER }}-assets.zip"
+        foreach ($file in $filesToArchive) {
+          if (!(Test-Path $file)) {
+            Write-Error "File $file does not exist."
+            exit 1
+          }
+        }
+        Compress-Archive -Path $filesToArchive -DestinationPath $archiveName
+
+#  - name: Create Release
+#      uses: ncipollo/release-action@v1.14.0
+#      with:
+#        allowUpdates: 'false'
+#        artifactErrorsFailBuild: 'false'
+#        artifacts: "${{ env.BUILD_NAME }}-${{ env.BUILD_VERSION }}.${{ env.BUILD_NUMBER }}-assets.zip"
+#        artifactContentType: 'raw'
+#        body: "Release of ${{ env.BUILD_NAME }} version ${{ env.BUILD_VERSION }} build ${{ github.run_number }}"
+#        bodyFile: ''
+#        commit: ${{ github.sha }}
+#        discussionCategory: ''
+#        draft: 'false'
+#        generateReleaseNotes: 'true'
+#        makeLatest: 'legacy'
+#        name: ${{ env.BUILD_NAME }}-${{ env.BUILD_VERSION }}.${{ env.BUILD_NUMBER }}
+#        omitBody: 'false'
+#        omitBodyDuringUpdate: 'false'
+#        omitDraftDuringUpdate: 'false'
+#        omitName: 'false'
+#        omitNameDuringUpdate: 'false'
+#        omitPrereleaseDuringUpdate: 'false'
+#        owner: ''
+#        prerelease: 'false'
+#        removeArtifacts: 'false'
+#        replacesArtifacts: 'true'
+#        repo: ''
+#        skipIfReleaseExists: 'false'
+#        tag: ${{ env.BUILD_VERSION }}-build-${{ github.run_number }}
+#        token: ${{ secrets.GITHUB_TOKEN }}
+#        updateOnlyUnreleased: 'false'
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  draft-release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Draft Release
+      uses: release-drafter/release-drafter@v6
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
