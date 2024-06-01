@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 	
 	if (argc < 2) {
 		std::cout
-			<< "touphScript v1.2.9 --- a FFVII text editor\n\n"
+			<< "touphScript v1.5.0 --- a FFVII text editor\n\n"
 			<< "(d)ump or (e)ncode?\n";
 		std::cin >> mode;
 		

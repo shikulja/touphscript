@@ -6,19 +6,19 @@
 #define TOUPHSCRIPT_ICON 666
 
 VS_VERSION_INFO	VERSIONINFO
-FILEVERSION 1,3,0,0
-PRODUCTVERSION 1,3,0,0
+FILEVERSION 1,5,0,0
+PRODUCTVERSION 1,5,0,0
 FILEOS VOS_NT_WINDOWS32
 FILETYPE VFT_APP {
 	BLOCK "StringFileInfo" {
 		BLOCK UK_ENG_UNICODE {
 			VALUE "CompanyName", "Luksy"
       VALUE "FileDescription", "FFVII text editor"
-      VALUE "FileVersion", "1.3.0"
+      VALUE "FileVersion", "1.5.0"
       VALUE "InternalName", "touphScript"
       VALUE "OriginalFilename", "touphScript.exe"
       VALUE "ProductName", "touphScript"
-      VALUE "ProductVersion", "1.3.0"
+      VALUE "ProductVersion", "1.5.0"
 		}
 	}
 	BLOCK "VarFileInfo" {
