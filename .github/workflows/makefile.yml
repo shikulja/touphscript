@@ -60,38 +60,38 @@ jobs:
         }
         Compress-Archive -Path $filesToArchive -DestinationPath $archiveName
 
-#  - name: Create Release
-#      uses: ncipollo/release-action@v1.14.0
-#      with:
-#        allowUpdates: 'false'
-#        artifactErrorsFailBuild: 'false'
-#        artifacts: "${{ env.BUILD_NAME }}-${{ env.BUILD_VERSION }}.${{ env.BUILD_NUMBER }}-assets.zip"
-#        artifactContentType: 'raw'
-#        body: "Release of ${{ env.BUILD_NAME }} version ${{ env.BUILD_VERSION }} build ${{ github.run_number }}"
-#        bodyFile: ''
-#        commit: ${{ github.sha }}
-#        discussionCategory: ''
-#        draft: 'false'
-#        generateReleaseNotes: 'true'
-#        makeLatest: 'legacy'
-#        name: ${{ env.BUILD_NAME }}-${{ env.BUILD_VERSION }}.${{ env.BUILD_NUMBER }}
-#        omitBody: 'false'
-#        omitBodyDuringUpdate: 'false'
-#        omitDraftDuringUpdate: 'false'
-#        omitName: 'false'
-#        omitNameDuringUpdate: 'false'
-#        omitPrereleaseDuringUpdate: 'false'
-#        owner: ''
-#        prerelease: 'false'
-#        removeArtifacts: 'false'
-#        replacesArtifacts: 'true'
-#        repo: ''
-#        skipIfReleaseExists: 'false'
-#        tag: ${{ env.BUILD_VERSION }}-build-${{ github.run_number }}
-#        token: ${{ secrets.GITHUB_TOKEN }}
-#        updateOnlyUnreleased: 'false'
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create Release
+      uses: ncipollo/release-action@v1.14.0
+      with:
+        allowUpdates: 'false'
+        artifactErrorsFailBuild: 'false'
+        artifacts: "${{ env.BUILD_NAME }}-${{ env.BUILD_VERSION }}.${{ env.BUILD_NUMBER }}-assets.zip"
+        artifactContentType: 'raw'
+        body: "Release of ${{ env.BUILD_NAME }} version ${{ env.BUILD_VERSION }} build ${{ github.run_number }}"
+        bodyFile: ''
+        commit: ${{ github.sha }}
+        discussionCategory: ''
+        draft: 'false'
+        generateReleaseNotes: 'true'
+        makeLatest: 'legacy'
+        name: ${{ env.BUILD_NAME }}-${{ env.BUILD_VERSION }}.${{ env.BUILD_NUMBER }}
+        omitBody: 'false'
+        omitBodyDuringUpdate: 'false'
+        omitDraftDuringUpdate: 'false'
+        omitName: 'false'
+        omitNameDuringUpdate: 'false'
+        omitPrereleaseDuringUpdate: 'false'
+        owner: ''
+        prerelease: 'false'
+        removeArtifacts: 'false'
+        replacesArtifacts: 'true'
+        repo: ''
+        skipIfReleaseExists: 'false'
+        tag: ${{ env.BUILD_VERSION }}-build-${{ github.run_number }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        updateOnlyUnreleased: 'false'
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   draft-release:
     needs: build
