@@ -87,7 +87,7 @@ jobs:
         replacesArtifacts: 'true'
         repo: ''
         skipIfReleaseExists: 'false'
-        tag: ${{ env.BUILD_VERSION }}-build-${{ github.run_number }}
+        tag: ${{ env.BUILD_VERSION }}.${{ env.BUILD_NUMBER }}
         token: ${{ secrets.GITHUB_TOKEN }}
         updateOnlyUnreleased: 'false'
       env:
